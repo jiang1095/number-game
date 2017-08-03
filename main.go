@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"strconv"
 )
 
@@ -52,6 +53,30 @@ func main() {
 		set[key] = append(set[key], v)
 	}
 	for k, v := range set {
-		fmt.Println(k, v)
+		fmt.Println(k, max_min(v))
 	}
+}
+
+func max_min(num_set []string) string {
+	var result = ""
+	var score = math.MaxInt32
+	for _, base := range num_set {
+		var set map[string][]string = make(map[string][]string)
+		var num_score = 0
+		for _, v := range num_set {
+			a, b := compare(base, v)
+			key := strconv.Itoa(a) + "A" + strconv.Itoa(b) + "B"
+			set[key] = append(set[key], v)
+		}
+		for _, v := range set {
+			if len(v) > num_score {
+				num_score = len(v)
+			}
+		}
+		if num_score < score {
+			score = num_score
+			result = base
+		}
+	}
+	return result
 }
