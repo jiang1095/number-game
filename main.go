@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"strconv"
+	"github.com/jiang1095/number-game/old"
 )
 
 var number_set []string
@@ -46,15 +47,17 @@ func compare(base, guess string) (int, int) {
 }
 
 func main() {
-	var set map[string][]string = make(map[string][]string)
-	for _, v := range number_set {
-		a, b := compare("0123", v)
-		key := strconv.Itoa(a) + "A" + strconv.Itoa(b) + "B"
-		set[key] = append(set[key], v)
-	}
-	for k, v := range set {
-		fmt.Println(k, max_min(v))
-	}
+	//var set map[string][]string = make(map[string][]string)
+	//for _, v := range number_set {
+	//	a, b := compare("0123", v)
+	//	key := strconv.Itoa(a) + "A" + strconv.Itoa(b) + "B"
+	//	set[key] = append(set[key], v)
+	//}
+	//for k, v := range set {
+	//	fmt.Println(k, max_min(v))
+	//}
+	root := old.NewTree(number_set)
+	root.Print()
 }
 
 func max_min(num_set []string) string {
@@ -73,6 +76,7 @@ func max_min(num_set []string) string {
 				num_score = len(v)
 			}
 		}
+		fmt.Println(num_score)
 		if num_score < score {
 			score = num_score
 			result = base
