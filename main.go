@@ -9,6 +9,7 @@ import (
 	"os"
 	"regexp"
 	"time"
+	"strings"
 )
 
 var number_set []string
@@ -86,6 +87,28 @@ func numberGame() {
 			if i == 9 {
 				fmt.Printf("很抱歉，你没能在十次以内猜到数字。正确答案是: %s\n", number)
 			}
+		}
+	}
+}
+
+func guessNumber() {
+	reader := bufio.NewReader(os.Stdin)
+	rand.Seed(time.Now().UnixNano())
+	guess_number_set := number_set
+	for {
+		guess := guess_number_set[rand.Intn(len(guess_number_set))]
+		var set map[string][]string = make(map[string][]string)
+		for _, v := range number_set {
+			a, b := compare(guess, v)
+			key := strconv.Itoa(a) + "A" + strconv.Itoa(b) + "B"
+			set[key] = append(set[key], v)
+		}
+		fmt.Println("我猜你的数字是:",guess)
+		fmt.Printf("本次猜测结果为: ")
+		data, _, _ := reader.ReadLine()
+		state := strings.ToUpper(string(data))
+		if state =="4A0B" {
+			fmt.Println("尽管你的数字很难猜，但最终还是被我猜出来了！")
 		}
 	}
 }
