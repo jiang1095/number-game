@@ -1,15 +1,15 @@
 package main
 
 import (
-	"math"
-	"strconv"
 	"bufio"
 	"fmt"
+	"math"
 	"math/rand"
 	"os"
 	"regexp"
-	"time"
+	"strconv"
 	"strings"
+	"time"
 )
 
 var number_set []string
@@ -49,7 +49,7 @@ func main() {
 				break
 			} else if game_type == 2 {
 				fmt.Println("我来猜你的数字")
-
+				guessNumber()
 				break
 			}
 		}
@@ -95,20 +95,45 @@ func guessNumber() {
 	reader := bufio.NewReader(os.Stdin)
 	rand.Seed(time.Now().UnixNano())
 	guess_number_set := number_set
+	times := 0
+L1:
 	for {
 		guess := guess_number_set[rand.Intn(len(guess_number_set))]
 		var set map[string][]string = make(map[string][]string)
-		for _, v := range number_set {
+		for _, v := range guess_number_set {
 			a, b := compare(guess, v)
 			key := strconv.Itoa(a) + "A" + strconv.Itoa(b) + "B"
 			set[key] = append(set[key], v)
 		}
-		fmt.Println("我猜你的数字是:",guess)
-		fmt.Printf("本次猜测结果为: ")
+		times += 1
+		fmt.Println("我猜你的数字是:", guess)
+		fmt.Printf("第%d次猜测结果为: ", times)
 		data, _, _ := reader.ReadLine()
 		state := strings.ToUpper(string(data))
-		if state =="4A0B" {
-			fmt.Println("尽管你的数字很难猜，但最终还是被我猜出来了！")
+		if state == "4A0B" {
+			fmt.Printf("尽管你的数字很难猜，我还是在第%d次把它猜出来了！\n", times)
+			break L1
+		} else {
+		L2:
+			for {
+				if set[state] == nil {
+					fmt.Println("你输入的状态造成了我的困惑，确认没有输错吗？")
+					fmt.Print("重新输入本次猜测结果？(y/n)")
+					data, _, _ := reader.ReadLine()
+					switch string(data) {
+					case "y":
+						fmt.Print("本次猜测结果为: ")
+						data, _, _ := reader.ReadLine()
+						state = strings.ToUpper(string(data))
+					case "n":
+						fmt.Println("好吧，你赢了，我没办法猜出你的数字……")
+						break L1
+					}
+				} else {
+					guess_number_set = set[state]
+					break L2
+				}
+			}
 		}
 	}
 }
@@ -130,28 +155,4 @@ func compare(base, guess string) (int, int) {
 		}
 	}
 	return a, b
-}
-
-func max_min(num_set []string) string {
-	var result = ""
-	var score = math.MaxInt32
-	for _, base := range num_set {
-		var set map[string][]string = make(map[string][]string)
-		var num_score = 0
-		for _, v := range num_set {
-			a, b := compare(base, v)
-			key := strconv.Itoa(a) + "A" + strconv.Itoa(b) + "B"
-			set[key] = append(set[key], v)
-		}
-		for _, v := range set {
-			if len(v) > num_score {
-				num_score = len(v)
-			}
-		}
-		if num_score < score {
-			score = num_score
-			result = base
-		}
-	}
-	return result
 }
