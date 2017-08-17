@@ -95,12 +95,12 @@ func guessNumber() {
 	rand.Seed(time.Now().UnixNano())
 	guess_number_set := number_set
 	times := 0
+	var (
+		guess_cache []string
+		state_cache []string
+	)
 	for {
-		var (
-			set         map[string][]string = make(map[string][]string)
-			guess_cache []string
-			state_cache []string
-		)
+		var set map[string][]string = make(map[string][]string)
 		guess := guess_number_set[rand.Intn(len(guess_number_set))]
 		guess_cache = append(guess_cache, guess)
 		for _, v := range guess_number_set {
@@ -173,7 +173,7 @@ func checkAnswer(guesses, states []string, answer string) {
 		a, b := compare(answer, v)
 		state := fmt.Sprintf("%dA%dB", a, b)
 		if state != states[i] {
-			fmt.Printf("在第%d次猜测中\n你给出的结果是:%s\n但我认为应该是:%s\n这可能是我没猜出来的原因\n", i+1, states[i], state)
+			fmt.Printf("在第%d次猜测中，我的数字是：%s\n你给出的结果是:%s\n但我认为结果应该是:%s\n这可能是我没猜出来的原因\n", v, i+1, states[i], state)
 			return
 		}
 	}
