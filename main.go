@@ -95,10 +95,14 @@ func guessNumber() {
 	rand.Seed(time.Now().UnixNano())
 	guess_number_set := number_set
 	times := 0
-L1:
 	for {
+		var (
+			set         map[string][]string = make(map[string][]string)
+			guess_cache []string
+			state_cache []string
+		)
 		guess := guess_number_set[rand.Intn(len(guess_number_set))]
-		var set map[string][]string = make(map[string][]string)
+		guess_cache = append(guess_cache, guess)
 		for _, v := range guess_number_set {
 			a, b := compare(guess, v)
 			key := strconv.Itoa(a) + "A" + strconv.Itoa(b) + "B"
@@ -109,11 +113,11 @@ L1:
 		fmt.Printf("第%d次猜测结果为: ", times)
 		data, _, _ := reader.ReadLine()
 		state := strings.ToUpper(string(data))
+		state_cache = append(state_cache, state)
 		if state == "4A0B" {
 			fmt.Printf("尽管你的数字很难猜，我还是在第%d次把它猜出来了！\n", times)
-			break L1
+			return
 		} else {
-		L2:
 			for {
 				if set[state] == nil {
 					fmt.Println("你输入的状态造成了我的困惑，确认没有输错吗？")
@@ -121,16 +125,20 @@ L1:
 					data, _, _ := reader.ReadLine()
 					switch string(data) {
 					case "y":
-						fmt.Print("本次猜测结果为: ")
+						fmt.Printf("第%d次猜测结果为: ", times)
 						data, _, _ := reader.ReadLine()
 						state = strings.ToUpper(string(data))
 					case "n":
 						fmt.Println("好吧，你赢了，我没办法猜出你的数字……")
-						break L1
+						fmt.Print("告诉我正确答案，让我看看呗：")
+						data, _, _ := reader.ReadLine()
+						anwser := string(data)
+						checkAnwser(guess_cache, state_cache, anwser)
+						return
 					}
 				} else {
 					guess_number_set = set[state]
-					break L2
+					break
 				}
 			}
 		}
@@ -154,4 +162,20 @@ func compare(base, guess string) (int, int) {
 		}
 	}
 	return a, b
+}
+
+func checkAnwser(guesses, states []string, anwser string) {
+	if len(guesses) != len(states) {
+		fmt.Println("猜测次数和给定的状态数目不匹配，无法检测！")
+		return
+	}
+	for i, v := range guesses {
+		a, b := compare(anwser, v)
+		state := fmt.Sprintf("%dA%dB", a, b)
+		if state != states[i] {
+			fmt.Printf("在第%d次猜测中\n你给出的结果是:%s\n但我认为应该是:%s\n这可能是我没猜出来的原因\n", i+1, states[i], state)
+			return
+		}
+	}
+	fmt.Println("好吧，我没法找出自己失败的原因，你实在是太厉害了！！！")
 }
