@@ -132,8 +132,8 @@ func guessNumber() {
 						fmt.Println("好吧，你赢了，我没办法猜出你的数字……")
 						fmt.Print("告诉我正确答案，让我看看呗：")
 						data, _, _ := reader.ReadLine()
-						anwser := string(data)
-						checkAnwser(guess_cache, state_cache, anwser)
+						answer := string(data)
+						checkAnswer(guess_cache, state_cache, answer)
 						return
 					}
 				} else {
@@ -164,13 +164,13 @@ func compare(base, guess string) (int, int) {
 	return a, b
 }
 
-func checkAnwser(guesses, states []string, anwser string) {
+func checkAnswer(guesses, states []string, answer string) {
 	if len(guesses) != len(states) {
 		fmt.Println("猜测次数和给定的状态数目不匹配，无法检测！")
 		return
 	}
 	for i, v := range guesses {
-		a, b := compare(anwser, v)
+		a, b := compare(answer, v)
 		state := fmt.Sprintf("%dA%dB", a, b)
 		if state != states[i] {
 			fmt.Printf("在第%d次猜测中\n你给出的结果是:%s\n但我认为应该是:%s\n这可能是我没猜出来的原因\n", i+1, states[i], state)
