@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"github.com/jiang1095/number-game/helper"
 )
 
 var number_set []string
@@ -77,7 +78,7 @@ func numberGame() {
 			continue
 		}
 		guess := string(data)
-		a, b := compare(number, guess)
+		a, b := helper.Compare(number, guess)
 		if a == 4 {
 			fmt.Printf("恭喜你在第%d次猜出了这个数字！\n", i+1)
 			break
@@ -104,7 +105,7 @@ func guessNumber() {
 		guess := guess_number_set[rand.Intn(len(guess_number_set))]
 		guess_cache = append(guess_cache, guess)
 		for _, v := range guess_number_set {
-			a, b := compare(guess, v)
+			a, b := helper.Compare(guess, v)
 			key := strconv.Itoa(a) + "A" + strconv.Itoa(b) + "B"
 			set[key] = append(set[key], v)
 		}
@@ -145,38 +146,13 @@ func guessNumber() {
 	}
 }
 
-func compare(base, guess string) (int, int) {
-	if len(base) != 4 || len(guess) != 4 {
-		return -1, -1
-	}
-	var count []int = make([]int, 10)
-	baseBytes := []byte(base)
-	guessBytes := []byte(guess)
-	a, b := 0, 0
-	for i, v := range baseBytes {
-		if v == guessBytes[i] {
-			a++
-		} else {
-			count[v-'0']++
-			if count[v-'0'] <= 0 {
-				b++
-			}
-			count[guessBytes[i]-'0']--
-			if count[guessBytes[i]-'0'] >= 0 {
-				b++
-			}
-		}
-	}
-	return a, b
-}
-
 func checkAnswer(guesses, states []string, answer string) {
 	if len(guesses) != len(states) {
 		fmt.Println("猜测次数和给定的状态数目不匹配，无法检测！")
 		return
 	}
 	for i, v := range guesses {
-		a, b := compare(answer, v)
+		a, b := helper.Compare(answer, v)
 		state := fmt.Sprintf("%dA%dB", a, b)
 		if state != states[i] {
 			fmt.Printf("在第%d次猜测中，我的数字是：%s\n你给出的结果是:%s\n但我认为结果应该是:%s\n这可能是我没猜出来的原因\n", v, i+1, states[i], state)
