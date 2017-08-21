@@ -3,31 +3,29 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"github.com/jiang1095/number-game/helper"
 	"math/rand"
 	"os"
 	"regexp"
 	"strconv"
 	"strings"
 	"time"
-	"github.com/jiang1095/number-game/helper"
 )
 
-var number_set []string
+var noDuplicateNumbersSet []string
+var duplicateNumbersSet []string
 
 func init() {
-	for i := 100; i < 10000; i++ {
+	for i := 0; i < 10000; i++ {
 		a := i / 1000
 		b := (i / 100) % 10
 		c := (i / 10) % 10
 		d := i % 10
+		noDuplicateNumbersSet = append(noDuplicateNumbersSet, strconv.Itoa(a)+strconv.Itoa(b)+strconv.Itoa(c)+strconv.Itoa(d))
 		if a == b || a == c || a == d || b == c || b == d || c == d {
 			continue
 		} else {
-			if i < 1000 {
-				number_set = append(number_set, "0"+strconv.Itoa(i))
-			} else {
-				number_set = append(number_set, strconv.Itoa(i))
-			}
+			duplicateNumbersSet = append(duplicateNumbersSet, strconv.Itoa(a)+strconv.Itoa(b)+strconv.Itoa(c)+strconv.Itoa(d))
 		}
 	}
 }
@@ -35,21 +33,31 @@ func init() {
 func main() {
 	var game_type int
 	fmt.Println("这是一个猜数字小游戏，你可以选择猜电脑生成的数字，或者让电脑猜你给出的数字：")
-	fmt.Println("\t1. 你来猜")
-	fmt.Println("\t2. 让我猜")
 	reader := bufio.NewReader(os.Stdin)
 	for {
 		for {
-			fmt.Print("请选择游戏模式(1/2): ")
+			fmt.Println("\t1. 你来猜（数字无重复）")
+			fmt.Println("\t2. 让我猜（数字无重复）")
+			fmt.Println("\t3. 你来猜（数字有重复）")
+			fmt.Println("\t4. 让我猜（数字有重复）")
+			fmt.Print("请选择游戏模式(1-4): ")
 			data, _, _ := reader.ReadLine()
 			game_type, _ = strconv.Atoi(string(data))
 			if game_type == 1 {
-				fmt.Println("你来猜我的数字")
-				numberGame()
+				fmt.Println("你来猜我的数字（数字无重复）!")
+				numberGame(noDuplicateNumbersSet)
 				break
 			} else if game_type == 2 {
-				fmt.Println("我来猜你的数字")
-				guessNumber()
+				fmt.Println("我来猜你的数字（数字无重复）!")
+				guessNumber(noDuplicateNumbersSet)
+				break
+			} else if game_type == 3 {
+				fmt.Println("你来猜我的数字（数字有重复）!")
+				numberGame(duplicateNumbersSet)
+				break
+			} else if game_type == 4 {
+				fmt.Println("我来猜你的数字（数字有重复）!")
+				guessNumber(duplicateNumbersSet)
 				break
 			}
 		}
@@ -65,11 +73,11 @@ func main() {
 	}
 }
 
-func numberGame() {
+func numberGame(numbersSet []string) {
 	reader := bufio.NewReader(os.Stdin)
 	rand.Seed(time.Now().UnixNano())
-	number := number_set[rand.Intn(5040)]
-	for i := 0; i < 10; i++ {
+	number := numbersSet[rand.Intn(len(numbersSet))]
+	for i := 0; i < 15; i++ {
 		fmt.Printf("请输入你的猜测(还剩%d次机会): ", 10-i)
 		data, _, _ := reader.ReadLine()
 		if match, _ := regexp.Match("^[0-9]*$", data); len(data) != 4 || !match {
@@ -91,10 +99,10 @@ func numberGame() {
 	}
 }
 
-func guessNumber() {
+func guessNumber(numbersSet []string) {
 	reader := bufio.NewReader(os.Stdin)
 	rand.Seed(time.Now().UnixNano())
-	guess_number_set := number_set
+	guess_number_set := numbersSet
 	times := 0
 	var (
 		guess_cache []string
