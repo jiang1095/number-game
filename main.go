@@ -149,15 +149,21 @@ func compare(base, guess string) (int, int) {
 	if len(base) != 4 || len(guess) != 4 {
 		return -1, -1
 	}
+	var count []int = make([]int, 10)
+	baseBytes := []byte(base)
+	guessBytes := []byte(guess)
 	a, b := 0, 0
-	for i1, v1 := range []byte(base) {
-		for i2, v2 := range []byte(guess) {
-			if v1 == v2 {
-				if i1 == i2 {
-					a++
-				} else {
-					b++
-				}
+	for i, v := range baseBytes {
+		if v == guessBytes[i] {
+			a++
+		} else {
+			count[v-'0']++
+			if count[v-'0'] <= 0 {
+				b++
+			}
+			count[guessBytes[i]-'0']--
+			if count[guessBytes[i]-'0'] >= 0 {
+				b++
 			}
 		}
 	}
