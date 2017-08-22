@@ -40,7 +40,8 @@ func main() {
 			fmt.Println("\t2. 让我猜（数字无重复）")
 			fmt.Println("\t3. 你来猜（数字有重复）")
 			fmt.Println("\t4. 让我猜（数字有重复）")
-			fmt.Print("请选择游戏模式(1-4): ")
+			fmt.Println("\t5. 退出游戏")
+			fmt.Print("请选择游戏模式(1-5): ")
 			data, _, _ := reader.ReadLine()
 			game_type, _ = strconv.Atoi(string(data))
 			if game_type == 1 {
@@ -59,6 +60,8 @@ func main() {
 				fmt.Println("我来猜你的数字（数字有重复）!")
 				guessNumber(duplicateNumbersSet)
 				break
+			} else if game_type == 5 {
+				os.Exit(0)
 			}
 		}
 		fmt.Print("再来一次？(y/n): ")

@@ -47,10 +47,8 @@ func (tree *NumberNode) Print() {
 		fmt.Print("\"next_number\":")
 		fmt.Print("{")
 		for k, v := range tree.Next_num {
-
 			fmt.Print("\"" + k + "\"" + ":")
 			v.Print()
-
 		}
 		fmt.Print("},")
 	}
