@@ -77,7 +77,7 @@ func numberGame(numbersSet []string) {
 	reader := bufio.NewReader(os.Stdin)
 	rand.Seed(time.Now().UnixNano())
 	number := numbersSet[rand.Intn(len(numbersSet))]
-	for i := 0; i < 15; i++ {
+	for i := 0; i < 20; i++ {
 		fmt.Printf("请输入你的猜测(还剩%d次机会): ", 10-i)
 		data, _, _ := reader.ReadLine()
 		if match, _ := regexp.Match("^[0-9]*$", data); len(data) != 4 || !match {
@@ -93,7 +93,7 @@ func numberGame(numbersSet []string) {
 		} else {
 			fmt.Printf("本次猜测结果为: %dA%dB\n", a, b)
 			if i == 9 {
-				fmt.Printf("很抱歉，你没能在十次以内猜到数字。正确答案是: %s\n", number)
+				fmt.Printf("很抱歉，你没能在二十次以内猜到数字。正确答案是: %s\n", number)
 			}
 		}
 	}
@@ -117,14 +117,20 @@ func guessNumber(numbersSet []string) {
 			key := strconv.Itoa(a) + "A" + strconv.Itoa(b) + "B"
 			set[key] = append(set[key], v)
 		}
-		times += 1
+		times++
 		fmt.Println("我猜你的数字是:", guess)
 		fmt.Printf("第%d次猜测结果为: ", times)
 		data, _, _ := reader.ReadLine()
 		state := strings.ToUpper(string(data))
 		state_cache = append(state_cache, state)
 		if state == "4A0B" {
-			fmt.Printf("尽管你的数字很难猜，我还是在第%d次把它猜出来了！\n", times)
+			if times <= 5 {
+				fmt.Printf("这个数字太简单了，我在第%d次就猜出来了！\n", times)
+			} else if times < 10 {
+				fmt.Printf("尽管你的数字很难猜，我还是在第%d次把它猜出来了！\n", times)
+			} else {
+				fmt.Printf("不得不说，你差点难倒我了，很难想象我居然猜了%d次才找到正确结果！\n", times)
+			}
 			return
 		} else {
 			for {
