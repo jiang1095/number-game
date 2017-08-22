@@ -81,7 +81,7 @@ func numberGame(numbersSet []string) {
 	rand.Seed(time.Now().UnixNano())
 	number := numbersSet[rand.Intn(len(numbersSet))]
 	for i := 0; i < 20; i++ {
-		fmt.Printf("请输入你的猜测(还剩%d次机会): ", 10-i)
+		fmt.Printf("请输入你的猜测(还剩%d次机会): ", 20-i)
 		data, _, _ := reader.ReadLine()
 		if match, _ := regexp.Match("^[0-9]*$", data); len(data) != 4 || !match {
 			fmt.Println("输入非法，请重新输入。")
