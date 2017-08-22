@@ -21,11 +21,11 @@ func init() {
 		b := (i / 100) % 10
 		c := (i / 10) % 10
 		d := i % 10
-		noDuplicateNumbersSet = append(noDuplicateNumbersSet, strconv.Itoa(a)+strconv.Itoa(b)+strconv.Itoa(c)+strconv.Itoa(d))
+		duplicateNumbersSet = append(duplicateNumbersSet, strconv.Itoa(a)+strconv.Itoa(b)+strconv.Itoa(c)+strconv.Itoa(d))
 		if a == b || a == c || a == d || b == c || b == d || c == d {
 			continue
 		} else {
-			duplicateNumbersSet = append(duplicateNumbersSet, strconv.Itoa(a)+strconv.Itoa(b)+strconv.Itoa(c)+strconv.Itoa(d))
+			noDuplicateNumbersSet = append(noDuplicateNumbersSet, strconv.Itoa(a)+strconv.Itoa(b)+strconv.Itoa(c)+strconv.Itoa(d))
 		}
 	}
 }
