@@ -172,7 +172,7 @@ func checkAnswer(guesses, states []string, answer string) {
 		a, b := helper.Compare(answer, v)
 		state := fmt.Sprintf("%dA%dB", a, b)
 		if state != states[i] {
-			fmt.Printf("在第%d次猜测中，我的数字是：%s\n你给出的结果是:%s\n但我认为结果应该是:%s\n这可能是我没猜出来的原因\n", v, i+1, states[i], state)
+			fmt.Printf("在第%d次猜测中，我的数字是：%s\n你给出的结果是:%s\n但我认为结果应该是:%s\n这可能是我没猜出来的原因\n", i+1, v, states[i], state)
 			return
 		}
 	}
