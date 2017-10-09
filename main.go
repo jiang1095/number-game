@@ -105,17 +105,17 @@ func numberGame(numbersSet []string) {
 func guessNumber(numbersSet []string) {
 	reader := bufio.NewReader(os.Stdin)
 	rand.Seed(time.Now().UnixNano())
-	guess_number_set := numbersSet
+	guessNumberSets := numbersSet
 	times := 0
 	var (
-		guess_cache []string
-		state_cache []string
+		guessCaches []string
+		stateCaches []string
 	)
 	for {
 		var set map[string][]string = make(map[string][]string)
-		guess := guess_number_set[rand.Intn(len(guess_number_set))]
-		guess_cache = append(guess_cache, guess)
-		for _, v := range guess_number_set {
+		guess := guessNumberSets[rand.Intn(len(guessNumberSets))]
+		guessCaches = append(guessCaches, guess)
+		for _, v := range guessNumberSets {
 			a, b := helper.Compare(guess, v)
 			key := strconv.Itoa(a) + "A" + strconv.Itoa(b) + "B"
 			set[key] = append(set[key], v)
@@ -125,7 +125,7 @@ func guessNumber(numbersSet []string) {
 		fmt.Printf("第%d次猜测结果为: ", times)
 		data, _, _ := reader.ReadLine()
 		state := strings.ToUpper(string(data))
-		state_cache = append(state_cache, state)
+		stateCaches = append(stateCaches, state)
 		if state == "4A0B" {
 			if times <= 5 {
 				fmt.Printf("这个数字太简单了，我在第%d次就猜出来了！\n", times)
@@ -151,11 +151,11 @@ func guessNumber(numbersSet []string) {
 						fmt.Print("告诉我正确答案，让我看看呗：")
 						data, _, _ := reader.ReadLine()
 						answer := string(data)
-						checkAnswer(guess_cache, state_cache, answer)
+						checkAnswer(guessCaches, stateCaches, answer)
 						return
 					}
 				} else {
-					guess_number_set = set[state]
+					guessNumberSets = set[state]
 					break
 				}
 			}
