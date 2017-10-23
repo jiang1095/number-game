@@ -31,7 +31,7 @@ func init() {
 }
 
 func main() {
-	var game_type int
+	var gameType int
 	fmt.Println("这是一个猜数字小游戏，你可以选择猜电脑生成的数字，或者让电脑猜你给出的数字：")
 	reader := bufio.NewReader(os.Stdin)
 	for {
@@ -43,24 +43,24 @@ func main() {
 			fmt.Println("\t5. 退出游戏")
 			fmt.Print("请选择游戏模式(1-5): ")
 			data, _, _ := reader.ReadLine()
-			game_type, _ = strconv.Atoi(string(data))
-			if game_type == 1 {
+			gameType, _ = strconv.Atoi(string(data))
+			if gameType == 1 {
 				fmt.Println("你来猜我的数字（数字无重复）!")
-				numberGame(noDuplicateNumbersSet)
+				numberGame(noDuplicateNumbersSet, 10)
 				break
-			} else if game_type == 2 {
+			} else if gameType == 2 {
 				fmt.Println("我来猜你的数字（数字无重复）!")
 				guessNumber(noDuplicateNumbersSet)
 				break
-			} else if game_type == 3 {
+			} else if gameType == 3 {
 				fmt.Println("你来猜我的数字（数字有重复）!")
-				numberGame(duplicateNumbersSet)
+				numberGame(duplicateNumbersSet, 15)
 				break
-			} else if game_type == 4 {
+			} else if gameType == 4 {
 				fmt.Println("我来猜你的数字（数字有重复）!")
 				guessNumber(duplicateNumbersSet)
 				break
-			} else if game_type == 5 {
+			} else if gameType == 5 {
 				os.Exit(0)
 			}
 		}
@@ -76,12 +76,12 @@ func main() {
 	}
 }
 
-func numberGame(numbersSet []string) {
+func numberGame(numbersSet []string, maxGuessTimes int) {
 	reader := bufio.NewReader(os.Stdin)
 	rand.Seed(time.Now().UnixNano())
 	number := numbersSet[rand.Intn(len(numbersSet))]
-	for i := 0; i < 20; i++ {
-		fmt.Printf("请输入你的猜测(还剩%d次机会): ", 20-i)
+	for i := 0; i < maxGuessTimes; i++ {
+		fmt.Printf("请输入你的猜测(还剩%d次机会): ", maxGuessTimes-i)
 		data, _, _ := reader.ReadLine()
 		if match, _ := regexp.Match("^[0-9]*$", data); len(data) != 4 || !match {
 			fmt.Println("输入非法，请重新输入。")
@@ -95,8 +95,8 @@ func numberGame(numbersSet []string) {
 			break
 		} else {
 			fmt.Printf("本次猜测结果为: %dA%dB\n", a, b)
-			if i == 9 {
-				fmt.Printf("很抱歉，你没能在二十次以内猜到数字。正确答案是: %s\n", number)
+			if i == maxGuessTimes-1 {
+				fmt.Printf("很抱歉，你没能在%d次以内猜到数字。正确答案是: %s\n", maxGuessTimes, number)
 			}
 		}
 	}
@@ -112,7 +112,7 @@ func guessNumber(numbersSet []string) {
 		stateCaches []string
 	)
 	for {
-		var set map[string][]string = make(map[string][]string)
+		var set = make(map[string][]string)
 		guess := guessNumberSets[rand.Intn(len(guessNumberSets))]
 		guessCaches = append(guessCaches, guess)
 		for _, v := range guessNumberSets {
