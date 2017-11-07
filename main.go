@@ -138,7 +138,7 @@ func guessNumber(numbersSet []string) {
 		} else {
 			for {
 				if set[state] == nil {
-					fmt.Println("你输入的状态造成了我的困惑，确认没有输错吗？")
+					fmt.Printf("你输入的状态%s造成了我的困惑，确认没有输错吗？", state)
 					fmt.Print("重新输入本次猜测结果？(y/n)")
 					data, _, _ := reader.ReadLine()
 					switch string(data) {
