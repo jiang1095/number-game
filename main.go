@@ -3,13 +3,13 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"github.com/jiang1095/number-game/helper"
 	"math/rand"
 	"os"
 	"regexp"
 	"strconv"
 	"strings"
-	"time"
+
+	"github.com/jiang1095/number-game/helper"
 )
 
 var noDuplicateNumbersSet []string
@@ -78,7 +78,7 @@ func main() {
 
 func numberGame(numbersSet []string, maxGuessTimes int) {
 	reader := bufio.NewReader(os.Stdin)
-	rand.Seed(time.Now().UnixNano())
+	//rand.Seed(time.Now().UnixNano())
 	number := numbersSet[rand.Intn(len(numbersSet))]
 	for i := 0; i < maxGuessTimes; i++ {
 		fmt.Printf("请输入你的猜测(还剩%d次机会): ", maxGuessTimes-i)
@@ -104,7 +104,7 @@ func numberGame(numbersSet []string, maxGuessTimes int) {
 
 func guessNumber(numbersSet []string) {
 	reader := bufio.NewReader(os.Stdin)
-	rand.Seed(time.Now().UnixNano())
+	//rand.Seed(time.Now().UnixNano())
 	guessNumberSets := numbersSet
 	times := 0
 	var (
