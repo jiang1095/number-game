@@ -125,6 +125,29 @@ func guessNumber(numbersSet []string) {
 		fmt.Printf("第%d次猜测结果为: ", times)
 		data, _, _ := reader.ReadLine()
 		state := strings.ToUpper(string(data))
+		for {
+			if set[state] == nil {
+				fmt.Printf("你输入的状态%s造成了我的困惑，确认没有输错吗？", state)
+				fmt.Print("重新输入本次猜测结果？(y/n)")
+				data, _, _ := reader.ReadLine()
+				switch string(data) {
+				case "y":
+					fmt.Printf("第%d次猜测结果为: ", times)
+					data, _, _ := reader.ReadLine()
+					state = strings.ToUpper(string(data))
+				case "n":
+					fmt.Println("好吧，你赢了，我没办法猜出你的数字……")
+					fmt.Print("告诉我正确答案，让我看看呗：")
+					data, _, _ := reader.ReadLine()
+					answer := string(data)
+					checkAnswer(guessCaches, append(stateCaches, state), answer)
+					return
+				}
+			} else {
+				guessNumberSets = set[state]
+				break
+			}
+		}
 		stateCaches = append(stateCaches, state)
 		if state == "4A0B" {
 			if times <= 5 {
@@ -135,30 +158,6 @@ func guessNumber(numbersSet []string) {
 				fmt.Printf("不得不说，你差点难倒我了，很难想象我居然猜了%d次才找到正确结果！\n", times)
 			}
 			return
-		} else {
-			for {
-				if set[state] == nil {
-					fmt.Printf("你输入的状态%s造成了我的困惑，确认没有输错吗？", state)
-					fmt.Print("重新输入本次猜测结果？(y/n)")
-					data, _, _ := reader.ReadLine()
-					switch string(data) {
-					case "y":
-						fmt.Printf("第%d次猜测结果为: ", times)
-						data, _, _ := reader.ReadLine()
-						state = strings.ToUpper(string(data))
-					case "n":
-						fmt.Println("好吧，你赢了，我没办法猜出你的数字……")
-						fmt.Print("告诉我正确答案，让我看看呗：")
-						data, _, _ := reader.ReadLine()
-						answer := string(data)
-						checkAnswer(guessCaches, stateCaches, answer)
-						return
-					}
-				} else {
-					guessNumberSets = set[state]
-					break
-				}
-			}
 		}
 	}
 }
